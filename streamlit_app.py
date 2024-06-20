@@ -352,7 +352,7 @@ elif choice == "Resumen":
 
         with col3:
             pwf0 = st.text_input("Presión medida al tiempo de cierre (psi)", buildup_test.pwf0)
-            skin_pressure_drop = st.text_input("Caída de presión por daño a la formación", buildup_test.skin_pressure_drop)
+            skin_pressure_drop = st.text_input("Caída de presión por daño a la formación (psi)", buildup_test.skin_pressure_drop)
     
     else:
         st.warning("Aún no puedes ver el resumen de los resultados.")
