@@ -52,6 +52,34 @@ class BuildupTest:
         return skin
 
 # -------------------------------------------------------------------------------------------
+class Value:    
+    def __init__(self, value, units):
+        self.value = value
+        self.units = units
+
+# -------------------------------------------------------------------------------------------   
+class Units:
+    def __init__(self, q, Np, pwf0, Bo, oil_viscosity, h, porosity, compressibility, rw, pwf, t):
+        # Operation data
+        self.q = q
+        self.Np = Np
+        self.pwf0 = pwf0
+
+        # Oil data
+        self.Bo = Bo
+        self.oil_viscosity = oil_viscosity
+        
+        # Formation data
+        self.h = h
+        self.porosity = porosity
+        self.compressibility = compressibility
+        self.rw = rw
+
+        # Test data
+        self.pwf = pwf
+        self.t = t
+
+# -------------------------------------------------------------------------------------------
 class HornerMethod:
 
     def __init__(self, pwf, t, tp, pwf0):
@@ -157,41 +185,31 @@ if choice == "Datos":
 
     with col1:
         with st.expander("Información de operación"):
-            q = st.text_input("Tasa de flujo antes del período de cierre (bbl/día)", )
-            Np = st.text_input("Producción acumulada (bbl)", )
-            pwf0 = st.text_input("Presión al momento de cierre (psia)", )
+            q = st.text_input("Tasa de flujo antes del período de cierre (bbl/día)", 280)
+            Np = st.text_input("Producción acumulada (bbl)", 2682)
+            pwf0 = st.text_input("Presión al momento de cierre (psia)", 1123)
 
     with col2:
         with st.expander("Información del petróleo"):
-            Bo = st.text_input("Factor de volumen del petróleo (BY/BN)", )
-            visc = st.text_input("Viscosidad (cp)", )
+            Bo = st.text_input("Factor de volumen del petróleo (BY/BN)", 1.31)
+            visc = st.text_input("Viscosidad (cp)", 2.0)
 
     with col3:
         with st.expander("Información de la formación"):
-            h = st.text_input("Espesor neto productivo (ft)", )
-            porosity = st.text_input("Porosidad", )
-            ct = st.text_input("Compresibilidad total ($\\text{psi}^{-1}$)", )
-            rw = st.text_input("Radio de drene (ft)", )
+            h = st.text_input("Espesor neto productivo (ft)", 40)
+            porosity = st.text_input("Porosidad", 0.10)
+            ct = st.text_input("Compresibilidad total ($\\text{psi}^{-1}$)", 15e-6)
+            rw = st.text_input("Radio de drene (ft)", 0.333)
 
     data_file = st.file_uploader("Subir datos", type=["csv"])
 
-    dataIsSaved = False
     if data_file is not None:
         data = np.loadtxt(data_file, delimiter=',', skiprows=1)
-        dataIsSaved = True
 
     guardar = st.button("Guardar")
 
-    numeric_input = q.isnumeric() and Np.isnumeric() and pwf0.isnumeric() and Bo.isnumeric() and visc.isnumeric() and h.isnumeric and porosity.isnumeric() and ct.isnumeric and rw.isnumeric()
-    
-    if guardar and not numeric_input:
-        st.error("Ingrese todos los datos requeridos.")
-    if guardar and not dataIsSaved:
-        st.error("Guarde los datos de la prueba de restauración de presión.")
-
-    if guardar and dataIsSaved and numeric_input:
+    if guardar:
         st.success("Registrado correctamente")
-        print(numeric_input)
         t = data[:, 0]
         pwf = data[:, 1] 
 
@@ -204,7 +222,6 @@ if choice == "Datos":
         st.session_state["horner"] = HornerMethod(pwf, t, tp, pwf0)
 
         print(tp)
-    
         
 
 elif choice == "Horner":
@@ -238,7 +255,7 @@ elif choice == "Horner":
         ax.legend()
         st.pyplot(fig)
 
-        st.markdown("---")
+        st.markdown("---------")
         # Call extrapolation interval
         extrapolation_interval = st.session_state["extrapolation_interval"]
         if not extrapolation_interval.isExtrapolated:
@@ -352,10 +369,10 @@ elif choice == "Resumen":
 
         with col3:
             pwf0 = st.text_input("Presión medida al tiempo de cierre (psi)", buildup_test.pwf0)
-            skin_pressure_drop = st.text_input("Caída de presión por daño a la formación (psi)", buildup_test.skin_pressure_drop)
+            skin_pressure_drop = st.text_input("Caída de presión por daño a la formación", buildup_test.skin_pressure_drop)
     
     else:
-        st.warning("Aún no puedes ver el resumen de los resultados.")
+        st.warning("Ingresa los datos primero")
 
 
 
