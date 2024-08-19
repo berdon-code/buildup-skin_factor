@@ -208,6 +208,7 @@ if choice == "Datos":
         #data = np.loadtxt(data_file, delimiter=',', skiprows=1)
         data = pd.read_excel(data_file)
         data = data.values
+
     
 
     guardar = st.button("Guardar")
