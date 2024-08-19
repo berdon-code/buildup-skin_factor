@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
+import pandas as pd
 
 # Poner ecuación de permeabilidad y de daño
 # Graficar delta s
@@ -185,26 +186,31 @@ if choice == "Datos":
 
     with col1:
         with st.expander("Información de operación"):
-            q = st.text_input("Tasa de flujo antes del período de cierre (bbl/día)", 280)
-            Np = st.text_input("Producción acumulada (bbl)", 2682)
-            pwf0 = st.text_input("Presión al momento de cierre (psia)", 1123)
+            q = st.text_input("Tasa de flujo antes del período de cierre (bbl/día)")
+            Np = st.text_input("Producción acumulada (bbl)")
+            pwf0 = st.text_input("Presión al momento de cierre (psia)")
 
     with col2:
         with st.expander("Información del petróleo"):
-            Bo = st.text_input("Factor de volumen del petróleo (BY/BN)", 1.31)
-            visc = st.text_input("Viscosidad (cp)", 2.0)
+            Bo = st.text_input("Factor de volumen del petróleo (BY/BN)")
+            visc = st.text_input("Viscosidad (cp)")
 
     with col3:
         with st.expander("Información de la formación"):
-            h = st.text_input("Espesor neto productivo (ft)", 40)
-            porosity = st.text_input("Porosidad", 0.10)
-            ct = st.text_input("Compresibilidad total ($\\text{psi}^{-1}$)", 15e-6)
-            rw = st.text_input("Radio de drene (ft)", 0.333)
+            h = st.text_input("Espesor neto productivo (ft)")
+            porosity = st.text_input("Porosidad (Valores de $ 0 > \\phi > 1) $")
+            ct = st.text_input("Compresibilidad total ($\\text{psi}^{-1}$)")
+            rw = st.text_input("Radio del pozo (ft)")
 
-    data_file = st.file_uploader("Subir datos", type=["csv"])
+    data_file = st.file_uploader("Subir datos", type=["xlsx"])
 
     if data_file is not None:
-        data = np.loadtxt(data_file, delimiter=',', skiprows=1)
+        #data = np.loadtxt(data_file, delimiter=',', skiprows=1)
+        data = pd.read_excel(data_file)
+        data = data.values
+
+        st.write(data)
+    
 
     guardar = st.button("Guardar")
 
